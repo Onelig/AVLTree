@@ -16,6 +16,17 @@ namespace Tree
 			Node* left;
 			Node* right;
 			T_Height height;
+
+			friend class AVLTree;
 		};
+
+	private:
+		Node* root;
+		bool isSuccessfully = true;
+		unsigned short size_ = 0;
+
+	public: // Constructors
+		AVLTree() : root(nullptr) { }
+		AVLTree(const T& data) : root(new Node(data)) { }
 	};
 }
