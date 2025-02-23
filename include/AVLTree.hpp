@@ -29,6 +29,20 @@ namespace Tree
 		// Private Methods
 		//
 
+		unsigned char abs(signed char element) const;
+
+		// Get The Correct Height
+		T_Height height(Node* root) const;
+
+		// Update Height
+		void update(Node* root);
+
+		// Get Balance Factor
+		signed char balance_factor(Node* root) const;
+
+		// Balance Root + Update Height
+		Node* balance(Node* root);
+
 		// R || Insert Element + Balance
 		Node* insert_(Node* root, const T& data);
 
@@ -45,9 +59,70 @@ namespace Tree
 	// Private Methods
 	//
 	
+	// Get The Correct Height
+	template<typename T, typename T_Height>
+	T_Height AVLTree<T, T_Height>::height(Node* root) const
+	{
+		return root ? root->height : 0;
+	}
+
+	template<typename T, typename T_Height>
+	inline unsigned char AVLTree<T, T_Height>::abs(signed char element) const
+	{
+		return element > 0 ? element : -element;
+	}
+
+	// Update Height
+	template<typename T, typename T_Height>
+	void AVLTree<T, T_Height>::update(Node* root)
+	{
+		root->height = (height(root->left) > height(root->right) ? height(root->left) : height(root->right)) + 1;
+	}
+
+	// Get Balance Factor
+	template<typename T, typename T_Height>
+	signed char AVLTree<T, T_Height>::balance_factor(Node* root) const
+	{
+		return height(root->left) - height(root->right);
+	}
+
+	// Balance Root + Update Height
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::balance(Node* root)
+	{
+		signed char bal_factor = balance_factor(root);
+		if (abs(bal_factor) <= 1)
+		{
+			update(root);
+		}
+		else
+		{
+			if (bal_factor == -2) // Left Rotation
+			{
+				signed char bal_factor_right = balance_factor(root->right);
+				if (bal_factor_right <= 0) // Single Left Rotation
+					SingleLeftRotation(root);
+
+				else if (bal_factor_right > 0) // Double Left Roration
+					DoubleLeftRotation(root);
+			}
+			else if (bal_factor == 2) // Right Rotation
+			{
+				signed char bal_factor_left = balance_factor(root->left);
+				if (bal_factor_left >= 0) // Single Right Rotation
+					SingleRightRotation(root);
+
+				else if (bal_factor_left < 0) // Double Right Roration
+					DoubleRightRotation(root);
+			}
+		}
+
+		return root;
+	}
+
 	// R || Insert Element + Balance
 	template<typename T, typename T_Height>
-	inline typename AVLTree<T, T_Height>::Node AVLTree<T, T_Height>::insert_(Node* root, const T& data)
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::insert_(Node* root, const T& data)
 	{
 		if (root == nullptr)
 		{
