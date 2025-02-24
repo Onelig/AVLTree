@@ -80,6 +80,9 @@ namespace Tree
 		// R || Erase Element + Balance
 		Node* erase_(Node* root, const T& data);
 
+		// R || Find Element
+		Node* find_(Node* root, const T& data) const;
+
 		// _Private Methods
 	public: // Constructors
 		AVLTree() : root(nullptr) { }
@@ -96,6 +99,7 @@ namespace Tree
 	public: // Methods
 		bool insert(const T& data);
 		bool erase(const T& data);
+		const Node* find(const T& data) const&;
 		void clear();
 	};
 
@@ -337,6 +341,30 @@ namespace Tree
 		return isSuccessfully ? balance(root) : root;
 	}
 
+	// R || Find Element
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::find_(Node* root, const T& data) const
+	{
+		if (root == nullptr)
+		{
+			return nullptr;
+		}
+		else if (root->data == data)
+		{
+			return root;
+		}
+		else if (data < root->data)
+		{
+			return find_(root->left, data);
+		}
+		else if (data > root->data)
+		{
+			return find_(root->right, data);
+		}
+
+		return nullptr;
+	}
+
 	// _Private Methods
 
 	//
@@ -424,6 +452,12 @@ namespace Tree
 		root = erase_(root, data);
 		size_ -= isSuccessfully;
 		return isSuccessfully;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename const AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::find(const T& data) const&
+	{
+		return find_(root, data);
 	}
 
 	template<typename T, typename T_Height>
