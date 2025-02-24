@@ -92,6 +92,7 @@ namespace Tree
 		AVLTree<T, T_Height>& operator=(const AVLTree<T, T_Height>& other);
 		AVLTree<T, T_Height>& operator=(AVLTree<T, T_Height>&& other) noexcept;
 
+		virtual ~AVLTree();
 	public: // Methods
 		bool insert(const T& data);
 		bool erase(const T& data);
@@ -392,6 +393,12 @@ namespace Tree
 		}
 
 		return *this;
+	}
+
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::~AVLTree()
+	{
+		this->clear();
 	}
 
 	// _Public Constructors
