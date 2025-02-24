@@ -88,9 +88,12 @@ namespace Tree
 
 		AVLTree(const AVLTree<T, T_Height>& other);
 
+		AVLTree<T, T_Height>& operator=(const AVLTree<T, T_Height>& other);
+
 	public: // Methods
 		bool insert(const T& data);
 		bool erase(const T& data);
+		void clear();
 	};
 
 	//
@@ -354,6 +357,19 @@ namespace Tree
 		root = CopyAVLTree(root, other.root);
 	}
 
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>& AVLTree<T, T_Height>::operator=(const AVLTree<T, T_Height>& other)
+	{
+		if (this != &other)
+		{
+			this->clear();
+			size_ = other.size_;
+			root = CopyAVLTree(root, other.root);
+		}
+
+		return *this;
+	}
+
 	// _Public Constructors
 
 
@@ -377,6 +393,16 @@ namespace Tree
 		root = erase_(root, data);
 		size_ -= isSuccessfully;
 		return isSuccessfully;
+	}
+
+	template<typename T, typename T_Height>
+	inline void AVLTree<T, T_Height>::clear()
+	{
+		if (root != nullptr)
+		{
+			root = RemoveAllNode(root);
+			size_ = 0;
+		}
 	}
 	
 	// _Public Methods
