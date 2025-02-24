@@ -55,6 +55,9 @@ namespace Tree
 
 		// _Balancing
 
+		// Remove All Elements (NEED THAT SIZE > 0)
+		Node* RemoveAllNode(Node* root);
+
 		// Copy Data to root from other_root
 		Node* CopyAVLTree(Node* root, const Node* other_root);
 
@@ -168,6 +171,23 @@ namespace Tree
 	}
 
 	// _Balancing
+
+	// Remove All Elements (NEED THAT SIZE > 0)
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::RemoveAllNode(Node* root)
+	{
+		if (root->left != nullptr)
+		{
+			root->left = RemoveAllNode(root->left);
+		}
+		if (root->right != nullptr)
+		{
+			root->right = RemoveAllNode(root->right);
+		}
+
+		delete root;
+		return nullptr;
+	}
 
 	// Copy Data to root from other_root
 	template<typename T, typename T_Height>
