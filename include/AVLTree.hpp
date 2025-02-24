@@ -31,6 +31,21 @@ namespace Tree
 
 		unsigned char abs(signed char element) const;
 
+		// Balancing
+
+		// Single Left Rotation
+		void SingleLeftRotation(Node*& root);
+
+		// Double Left Roration
+		void DoubleLeftRotation(Node*& root);
+
+		// Single Right Rotation
+		void SingleRightRotation(Node*& root);
+
+		// Double Right Roration
+		void DoubleRightRotation(Node*& root);
+
+
 		// Get The Correct Height
 		T_Height height(Node* root) const;
 
@@ -59,6 +74,67 @@ namespace Tree
 	// Private Methods
 	//
 	
+	// Balancing
+
+	// Single Left Rotation
+	template<typename T, typename T_Height>
+	void AVLTree<T, T_Height>::SingleLeftRotation(Node*& root)
+	{
+		Node* root_copy = root;
+		root = root->right;
+		root_copy->right = root->left;
+		root->left = root_copy;
+
+		update(root->left);
+		update(root);
+	}
+
+	// Double Left Roration
+	template<typename T, typename T_Height>
+	void AVLTree<T, T_Height>::DoubleLeftRotation(Node*& root)
+	{
+		Node* root_copy_main = root, * root_copy_right = root->right;
+		root = root_copy_right->left;
+		root_copy_main->right = root->left;
+		root_copy_right->left = root->right;
+		root->left = root_copy_main;
+		root->right = root_copy_right;
+
+		update(root->left);
+		update(root->right);
+		update(root);
+	}
+
+	// Single Right Rotation
+	template<typename T, typename T_Height>
+	void AVLTree<T, T_Height>::SingleRightRotation(Node*& root)
+	{
+		Node* root_copy = root;
+		root = root->left;
+		root_copy->left = root->right;
+		root->right = root_copy;
+
+		update(root->right);
+		update(root);
+	}
+
+	// Double Right Roration
+	template<typename T, typename T_Height>
+	void AVLTree<T, T_Height>::DoubleRightRotation(Node*& root)
+	{
+		Node* root_copy_main = root, * root_copy_left = root->left;
+		root = root_copy_left->right;
+		root_copy_main->left = root->right;
+		root_copy_left->right = root->left;
+		root->right = root_copy_main;
+		root->left = root_copy_left;
+
+		update(root->right);
+		update(root->left);
+		update(root);
+	}
+
+
 	// Get The Correct Height
 	template<typename T, typename T_Height>
 	T_Height AVLTree<T, T_Height>::height(Node* root) const
