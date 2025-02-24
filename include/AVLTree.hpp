@@ -339,8 +339,18 @@ namespace Tree
 			if (root->right != nullptr)
 			{
 				Node* minroot = GetMinElement(root->right);
-				root->data = minroot->data;
-				root->right = RemBalMin(root->right, minroot);
+				if (minroot == root->right)
+				{
+					Node* copy_root = root;
+					root = root->right;
+					delete copy_root;
+					balance(root);
+				}
+				else
+				{
+					root->data = minroot->data;
+					root->right = RemBalMin(root->right, minroot);
+				}
 			}
 			else
 			{
