@@ -58,8 +58,12 @@ namespace Tree
 		// Balance Root + Update Height
 		Node* balance(Node* root);
 
+
 		// R || Insert Element + Balance
 		Node* insert_(Node* root, const T& data);
+
+		// R || Erase Element + Balance
+		Node* erase_(Node* root, const T& data);
 
 	public: // Constructors
 		AVLTree() : root(nullptr) { }
@@ -67,7 +71,7 @@ namespace Tree
 
 	public: // Methods
 		bool insert(const T& data);
-
+		bool erase(const T& data);
 	};
 
 	//
@@ -78,7 +82,7 @@ namespace Tree
 
 	// Single Left Rotation
 	template<typename T, typename T_Height>
-	void AVLTree<T, T_Height>::SingleLeftRotation(Node*& root)
+	inline void AVLTree<T, T_Height>::SingleLeftRotation(Node*& root)
 	{
 		Node* root_copy = root;
 		root = root->right;
@@ -91,7 +95,7 @@ namespace Tree
 
 	// Double Left Roration
 	template<typename T, typename T_Height>
-	void AVLTree<T, T_Height>::DoubleLeftRotation(Node*& root)
+	inline void AVLTree<T, T_Height>::DoubleLeftRotation(Node*& root)
 	{
 		Node* root_copy_main = root, * root_copy_right = root->right;
 		root = root_copy_right->left;
@@ -107,7 +111,7 @@ namespace Tree
 
 	// Single Right Rotation
 	template<typename T, typename T_Height>
-	void AVLTree<T, T_Height>::SingleRightRotation(Node*& root)
+	inline void AVLTree<T, T_Height>::SingleRightRotation(Node*& root)
 	{
 		Node* root_copy = root;
 		root = root->left;
@@ -120,7 +124,7 @@ namespace Tree
 
 	// Double Right Roration
 	template<typename T, typename T_Height>
-	void AVLTree<T, T_Height>::DoubleRightRotation(Node*& root)
+	inline void AVLTree<T, T_Height>::DoubleRightRotation(Node*& root)
 	{
 		Node* root_copy_main = root, * root_copy_left = root->left;
 		root = root_copy_left->right;
@@ -137,7 +141,7 @@ namespace Tree
 
 	// Get The Correct Height
 	template<typename T, typename T_Height>
-	T_Height AVLTree<T, T_Height>::height(Node* root) const
+	inline T_Height AVLTree<T, T_Height>::height(Node* root) const
 	{
 		return root ? root->height : 0;
 	}
@@ -150,14 +154,14 @@ namespace Tree
 
 	// Update Height
 	template<typename T, typename T_Height>
-	void AVLTree<T, T_Height>::update(Node* root)
+	inline void AVLTree<T, T_Height>::update(Node* root)
 	{
 		root->height = (height(root->left) > height(root->right) ? height(root->left) : height(root->right)) + 1;
 	}
 
 	// Get Balance Factor
 	template<typename T, typename T_Height>
-	signed char AVLTree<T, T_Height>::balance_factor(Node* root) const
+	inline signed char AVLTree<T, T_Height>::balance_factor(Node* root) const
 	{
 		return height(root->left) - height(root->right);
 	}
@@ -221,6 +225,42 @@ namespace Tree
 		return isSuccessfully ? balance(root) : root;
 	}
 
+	// R || Erase Element + Balance
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::erase_(Node* root, const T& data)
+	{
+		if (root == nullptr)
+		{
+			isSuccessfully = false;
+			return nullptr;
+		}
+		else if (root->data == data)
+		{
+			if (root->right != nullptr)
+			{
+				Node* minroot = GetMinElement(root->right);
+				root->data = minroot->data;
+				root->right = RemBalMin(root->right, minroot);
+			}
+			else
+			{
+				Node* copy_root = root;
+				root = root->left;
+				delete copy_root;
+			}
+		}
+		else if (data < root->data)
+		{
+			root->left = erase_(root->left, data);
+		}
+		else if (data > root->data)
+		{
+			root->right = erase_(root->right, data);
+		}
+
+		return isSuccessfully ? balance(root) : root;
+	}
+
 	//
 	// Public Methods
 	//
@@ -233,4 +273,14 @@ namespace Tree
 		size_ += isSuccessfully;
 		return isSuccessfully;
 	}
+
+	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::erase(const T& data)
+	{
+		isSuccessfully = true;
+		root = erase_(root, data);
+		size_ -= isSuccessfully;
+		return isSuccessfully;
+	}
+
 }
