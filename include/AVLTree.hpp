@@ -29,6 +29,13 @@ namespace Tree
 		// Private Methods
 		//
 
+		// static Methods
+		
+		// Get Minimal Element
+		static Node* GetMinElement(Node* root);
+
+		// _static Methods
+
 		unsigned char abs(signed char element) const;
 
 		// Balancing
@@ -45,6 +52,10 @@ namespace Tree
 		// Double Right Roration
 		void DoubleRightRotation(Node*& root);
 
+		// _Balancing
+
+		// Remove Minimal Element + Balance Tree
+		Node* RemBalMin(Node* root, Node* minroot);
 
 		// Get The Correct Height
 		T_Height height(Node* root) const;
@@ -65,6 +76,7 @@ namespace Tree
 		// R || Erase Element + Balance
 		Node* erase_(Node* root, const T& data);
 
+		// _Private Methods
 	public: // Constructors
 		AVLTree() : root(nullptr) { }
 		AVLTree(const T& data) : root(new Node(data)) { }
@@ -138,6 +150,24 @@ namespace Tree
 		update(root);
 	}
 
+	// _Balancing
+
+	// Remove Minimal Element + Balance Tree
+	template<typename T, typename T_Height>
+	typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::RemBalMin(Node* root, Node* minroot)
+	{
+		if (root->left == minroot)
+		{
+			delete minroot;
+			root->left = nullptr;
+		}
+		else
+		{
+			root->left = RemBalMin(root->left, minroot);
+		}
+
+		return balance(root);
+	}
 
 	// Get The Correct Height
 	template<typename T, typename T_Height>
@@ -145,6 +175,18 @@ namespace Tree
 	{
 		return root ? root->height : 0;
 	}
+
+
+	// static Methods
+
+	// Get Minimal Element
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::GetMinElement(Node* root)
+	{
+		return root->left == nullptr ? root : GetMinElement(root->left);
+	}
+
+	// _static Methods
 
 	template<typename T, typename T_Height>
 	inline unsigned char AVLTree<T, T_Height>::abs(signed char element) const
@@ -260,6 +302,9 @@ namespace Tree
 
 		return isSuccessfully ? balance(root) : root;
 	}
+
+	// _Private Methods
+
 
 	//
 	// Public Methods
