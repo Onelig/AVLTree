@@ -212,30 +212,33 @@ namespace Tree
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::balance(Node* root)
 	{
-		signed char bal_factor = balance_factor(root);
-		if (abs(bal_factor) <= 1)
+		if (root)
 		{
-			update(root);
-		}
-		else
-		{
-			if (bal_factor == -2) // Left Rotation
+			signed char bal_factor = balance_factor(root);
+			if (abs(bal_factor) <= 1)
 			{
-				signed char bal_factor_right = balance_factor(root->right);
-				if (bal_factor_right <= 0) // Single Left Rotation
-					SingleLeftRotation(root);
-
-				else if (bal_factor_right > 0) // Double Left Roration
-					DoubleLeftRotation(root);
+				update(root);
 			}
-			else if (bal_factor == 2) // Right Rotation
+			else
 			{
-				signed char bal_factor_left = balance_factor(root->left);
-				if (bal_factor_left >= 0) // Single Right Rotation
-					SingleRightRotation(root);
+				if (bal_factor == -2) // Left Rotation
+				{
+					signed char bal_factor_right = balance_factor(root->right);
+					if (bal_factor_right <= 0) // Single Left Rotation
+						SingleLeftRotation(root);
 
-				else if (bal_factor_left < 0) // Double Right Roration
-					DoubleRightRotation(root);
+					else if (bal_factor_right > 0) // Double Left Roration
+						DoubleLeftRotation(root);
+				}
+				else if (bal_factor == 2) // Right Rotation
+				{
+					signed char bal_factor_left = balance_factor(root->left);
+					if (bal_factor_left >= 0) // Single Right Rotation
+						SingleRightRotation(root);
+
+					else if (bal_factor_left < 0) // Double Right Roration
+						DoubleRightRotation(root);
+				}
 			}
 		}
 
