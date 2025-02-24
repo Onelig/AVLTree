@@ -55,6 +55,9 @@ namespace Tree
 
 		// _Balancing
 
+		// Copy Data to root from other_root
+		Node* CopyAVLTree(Node* root, const Node* other_root);
+
 		// Remove Minimal Element + Balance Tree
 		Node* RemBalMin(Node* root, Node* minroot);
 
@@ -82,6 +85,8 @@ namespace Tree
 		AVLTree() : root(nullptr) { }
 		AVLTree(const T& data) : root(new Node(data)) { }
 		AVLTree(const std::initializer_list<T>& init_list);
+
+		AVLTree(const AVLTree<T, T_Height>& other);
 
 	public: // Methods
 		bool insert(const T& data);
@@ -153,6 +158,24 @@ namespace Tree
 	}
 
 	// _Balancing
+
+	// Copy Data to root from other_root
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::CopyAVLTree(Node* root, const Node* other_root)
+	{
+		if (other_root == nullptr)
+		{
+			return nullptr;
+		}
+
+		root = new Node(other_root->data);
+		root->height = other_root->height;
+
+		root->left = CopyAVLTree(root->left, other_root->left);
+		root->right = CopyAVLTree(root->right, other_root->right);
+
+		return root;
+	}
 
 	// Remove Minimal Element + Balance Tree
 	template<typename T, typename T_Height>
@@ -322,6 +345,13 @@ namespace Tree
 		{
 			insert(value);
 		}
+	}
+
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::AVLTree(const AVLTree<T, T_Height>& other)
+		: size_(other.size_)
+	{
+		root = CopyAVLTree(root, other.root);
 	}
 
 	// _Public Constructors
