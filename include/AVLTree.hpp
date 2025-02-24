@@ -87,8 +87,10 @@ namespace Tree
 		AVLTree(const std::initializer_list<T>& init_list);
 
 		AVLTree(const AVLTree<T, T_Height>& other);
+		AVLTree(const AVLTree<T, T_Height>&& other);
 
 		AVLTree<T, T_Height>& operator=(const AVLTree<T, T_Height>& other);
+		AVLTree<T, T_Height>& operator=(AVLTree<T, T_Height>&& other) noexcept;
 
 	public: // Methods
 		bool insert(const T& data);
@@ -358,6 +360,13 @@ namespace Tree
 	}
 
 	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::AVLTree(AVLTree<T, T_Height>&& other)
+		: root(other.root), size_(other.size_)
+	{
+		other.root = nullptr;
+	}
+
+	template<typename T, typename T_Height>
 	inline AVLTree<T, T_Height>& AVLTree<T, T_Height>::operator=(const AVLTree<T, T_Height>& other)
 	{
 		if (this != &other)
@@ -365,6 +374,21 @@ namespace Tree
 			this->clear();
 			size_ = other.size_;
 			root = CopyAVLTree(root, other.root);
+		}
+
+		return *this;
+	}
+
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>& AVLTree<T, T_Height>::operator=(AVLTree<T, T_Height>&& other) noexcept
+	{
+		if (this != &other)
+		{
+			this->clear();
+
+			size_ = other.size_;
+			root = other.root;
+			other.root = nullptr;
 		}
 
 		return *this;
