@@ -93,7 +93,7 @@ namespace Tree
 		AVLTree(const std::initializer_list<T>& init_list);
 
 		AVLTree(const AVLTree<T, T_Height>& other);
-		AVLTree(const AVLTree<T, T_Height>&& other);
+		AVLTree(AVLTree<T, T_Height>&& other);
 
 		AVLTree<T, T_Height>& operator=(const AVLTree<T, T_Height>& other);
 		AVLTree<T, T_Height>& operator=(AVLTree<T, T_Height>&& other) noexcept;
@@ -174,7 +174,7 @@ namespace Tree
 
 	// Remove All Elements (NEED THAT SIZE > 0)
 	template<typename T, typename T_Height>
-	inline AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::RemoveAllNode(Node* root)
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::RemoveAllNode(Node* root)
 	{
 		if (root->left != nullptr)
 		{
@@ -191,7 +191,7 @@ namespace Tree
 
 	// Copy Data to root from other_root
 	template<typename T, typename T_Height>
-	inline AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::CopyAVLTree(Node* root, const Node* other_root)
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::CopyAVLTree(Node* root, const Node* other_root)
 	{
 		if (other_root == nullptr)
 		{
@@ -363,7 +363,7 @@ namespace Tree
 
 	// R || Find Element
 	template<typename T, typename T_Height>
-	inline AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::find_(Node* root, const T& data) const
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::find_(Node* root, const T& data) const
 	{
 		if (root == nullptr)
 		{
