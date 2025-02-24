@@ -1,4 +1,5 @@
 #pragma once
+#include <initializer_list>
 
 namespace Tree
 {
@@ -80,6 +81,7 @@ namespace Tree
 	public: // Constructors
 		AVLTree() : root(nullptr) { }
 		AVLTree(const T& data) : root(new Node(data)) { }
+		AVLTree(const std::initializer_list<T>& init_list);
 
 	public: // Methods
 		bool insert(const T& data);
@@ -154,7 +156,7 @@ namespace Tree
 
 	// Remove Minimal Element + Balance Tree
 	template<typename T, typename T_Height>
-	typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::RemBalMin(Node* root, Node* minroot)
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::RemBalMin(Node* root, Node* minroot)
 	{
 		if (root->left == minroot)
 		{
@@ -308,6 +310,22 @@ namespace Tree
 
 	// _Private Methods
 
+	//
+	// Public Constructors
+	//
+
+	template<typename T, typename T_Height>
+	inline AVLTree<T, T_Height>::AVLTree(const std::initializer_list<T>& data)
+		: root(nullptr)
+	{
+		for (const T& value : data)
+		{
+			insert(value);
+		}
+	}
+
+	// _Public Constructors
+
 
 	//
 	// Public Methods
@@ -330,5 +348,6 @@ namespace Tree
 		size_ -= isSuccessfully;
 		return isSuccessfully;
 	}
-
+	
+	// _Public Methods
 }
