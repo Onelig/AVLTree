@@ -29,7 +29,7 @@ namespace Tree
 
 	private:
 		Node* root;
-		bool isSuccessfully = true;
+		mutable bool isSuccessfully = true;
 		unsigned short size_ = 0;
 
 		static constexpr AVLTree::Node* BEGIN = reinterpret_cast<AVLTree::Node*>(0x1);
@@ -77,6 +77,9 @@ namespace Tree
 
 		// _Balancing
 
+		// Compare 2 AVLTrees
+		void IsEqual(const Node* myRoot, const Node* other) const;
+
 		// Remove All Elements (NEED THAT SIZE > 0)
 		Node* RemoveAllNode(Node* root);
 
@@ -119,7 +122,8 @@ namespace Tree
 
 		AVLTree<T, T_Height>& operator=(const AVLTree<T, T_Height>& other);
 		AVLTree<T, T_Height>& operator=(AVLTree<T, T_Height>&& other) noexcept;
-
+		bool operator==(const AVLTree<T, T_Height>& other) const;
+		
 		virtual ~AVLTree();
 	public: // Methods
 		bool insert(const T& data);
@@ -229,6 +233,28 @@ namespace Tree
 	}
 
 	// _Balancing
+
+	template<typename T, typename T_Height>
+	inline void AVLTree<T, T_Height>::IsEqual(const Node* myRoot, const Node* other) const
+	{
+		if (!isSuccessfully)
+			return;
+
+		if (myRoot != nullptr && other != nullptr) 
+		{
+			if (myRoot->data != other->data)
+			{
+				isSuccessfully = false;
+			}
+
+			IsEqual(myRoot->right, other->right);
+			IsEqual(myRoot->left, other->left);
+		}
+		else if (myRoot || other)
+		{
+			isSuccessfully = false;
+		}
+	}
 
 	// Remove All Elements (NEED THAT SIZE > 0)
 	template<typename T, typename T_Height>
@@ -610,6 +636,16 @@ namespace Tree
 	}
 
 	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::operator==(const AVLTree<T, T_Height>& other) const
+	{
+		isSuccessfully = (size_ == other.size_);
+		if (isSuccessfully)
+			IsEqual(root, other.root);
+
+		return isSuccessfully;
+	}
+
+	template<typename T, typename T_Height>
 	inline AVLTree<T, T_Height>::~AVLTree()
 	{
 		this->clear();
@@ -797,8 +833,6 @@ namespace Tree
 	{
 		return &current->data;
 	}
-
-	// cIterator
 
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::begin() const
