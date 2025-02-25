@@ -776,4 +776,22 @@ namespace Tree
 		}
 		return copy_iter;
 	}
+
+	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::cIterator::operator==(const cIterator& other) const
+	{
+		return other.current == current;
+	}
+
+	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::cIterator::operator!=(const cIterator& other) const
+	{
+		return other.current != current;
+	}
+
+	template<typename T, typename T_Height>
+	inline T* AVLTree<T, T_Height>::cIterator::operator->() const
+	{
+		return &current->data;
+	}
 }
