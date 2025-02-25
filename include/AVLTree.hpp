@@ -104,6 +104,7 @@ namespace Tree
 		bool erase(const T& data);
 		const Node* find(const T& data) const&;
 		void clear();
+		void swap(Tree::AVLTree<T, T_Height>& AvlTree);
 	};
 
 	//
@@ -345,7 +346,6 @@ namespace Tree
 					root = root->right;
 					root->left = copy_root->left;
 					delete copy_root;
-					balance(root);
 				}
 				else
 				{
@@ -499,6 +499,18 @@ namespace Tree
 			root = RemoveAllNode(root);
 			size_ = 0;
 		}
+	}
+
+	template<typename T, typename T_Height>
+	inline void AVLTree<T, T_Height>::swap(Tree::AVLTree<T, T_Height>& AvlTree)
+	{
+		Node* copy_root = root;
+		root = AvlTree.root;
+		AvlTree.root = copy_root;
+
+		unsigned short copy_size = size_;
+		size_ = AvlTree.size_;
+		AvlTree.size_ = copy_size;
 	}
 	
 	// _Public Methods
