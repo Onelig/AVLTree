@@ -343,13 +343,14 @@ namespace Tree
 				{
 					Node* copy_root = root;
 					root = root->right;
+					root->left = copy_root->left;
 					delete copy_root;
 					balance(root);
 				}
 				else
 				{
 					root->data = minroot->data;
-					root->right = RemBalMin(root->right, minroot);
+					root->right = RemBalMin(root->right, minroot);	
 				}
 			}
 			else
