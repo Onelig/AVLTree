@@ -158,6 +158,10 @@ namespace Tree
 			T* operator->() const;
 		};
 
+		[[nodiscard]] cIterator begin() const;
+		[[nodiscard]] const cIterator cbegin() const;
+		[[nodiscard]] cIterator end() const;
+		[[nodiscard]] const cIterator cend() const;
 	};
 
 	//
@@ -334,9 +338,8 @@ namespace Tree
 				{
 					if (GetMaxElement(root->left)->data > data)
 					{
-						return GetLvlUpL(data, root->left->right);
+						return GetLvlUp(data, root->left->right);
 					}
-
 					return root;
 				}
 				else if (root->data < data)
@@ -361,9 +364,9 @@ namespace Tree
 			{
 				if (root->data < data)
 				{
-					if (GetMixElement(root->right)->data < data)
+					if (GetMinElement(root->right)->data < data)
 					{
-						return GetLvlUpL(data, root->right->left);
+						return GetLvlDw(data, root->right->left);
 					}
 
 					return root;
@@ -794,4 +797,40 @@ namespace Tree
 	{
 		return &current->data;
 	}
+
+	// cIterator
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::begin() const
+	{
+		if (root == nullptr)
+		{
+			return cIterator(END, nullptr);
+		}
+		return cIterator(GetMinElement(root), root);
+	}
+
+	template<typename T, typename T_Height>
+	inline const typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::cbegin() const
+	{
+		if (root == nullptr)
+		{
+			return cIterator(END, nullptr);
+		}
+		return cIterator(GetMinElement(root), root);
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::end() const
+	{
+		return cIterator(END, root);
+	}
+
+	template<typename T, typename T_Height>
+	inline const typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::cend() const
+	{
+		return cIterator(END, root);
+	}
+
+	// _cIterator
 }
