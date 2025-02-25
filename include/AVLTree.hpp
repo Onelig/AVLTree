@@ -44,8 +44,12 @@ namespace Tree
 		// Get Next Element
 		static Node* getNext(Node* current, Node* root);
 
+		// Get Previous Element
+		static Node* getPrevious(Node* current, Node* root);
+
 		// Get Next Lvl + !!! DO NOT USE FOR MIDDLE ELEMENT !!!
 		static Node* GetLvlUp(const T& data, Node* root);
+		static Node* GetLvlDw(const T& data, Node* root);
 
 		// Get Minimal Element
 		static Node* GetMinElement(Node* root);
@@ -125,6 +129,7 @@ namespace Tree
 		void swap(Tree::AVLTree<T, T_Height>& AvlTree);
 		unsigned short size();
 
+		friend class cIterator;
 	public: // cIterator
 		class cIterator
 		{
@@ -294,20 +299,30 @@ namespace Tree
 		}
 		else
 		{
-			if ()
-			{
-
-			}
-			if (current->data != root->data)
-			{
-				return_node = GetLvlUp(current->data, root);
-			}
+			return_node = GetLvlUp(current->data, root);
 		}
 
 		return return_node;
 	}
 
-	// Get Next Lvl ! DO NOT USE FOR MID ELEMENT
+	// Get Previous Element
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::getPrevious(Node* current, Node* root)
+	{
+		Node* return_node = nullptr;
+		if (current->left)
+		{
+			return_node = GetMaxElement(current->left);
+		}
+		else
+		{
+			return_node = GetLvlDw(current->data, root);
+		}
+
+		return return_node;
+	}
+
+	// Get Next Lvl UP ! DO NOT USE FOR MID ELEMENT
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::GetLvlUp(const T& data, Node* root)
 	{
@@ -326,10 +341,39 @@ namespace Tree
 				}
 				else if (root->data < data)
 				{
-					return GetLvlUpL(data, root->right);
+					return GetLvlUp(data, root->right);
 				}
 			}
-			return GetLvlUpL(data, root->left);
+			return GetLvlUp(data, root->left);
+		}
+
+		return root;
+	}
+
+
+	// Get Next Lvl Down ! DO NOT USE FOR MID ELEMENT
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::GetLvlDw(const T& data, Node* root)
+	{
+		if (root && root->right)
+		{
+			if (root->right->data >= data)
+			{
+				if (root->data < data)
+				{
+					if (GetMixElement(root->right)->data < data)
+					{
+						return GetLvlUpL(data, root->right->left);
+					}
+
+					return root;
+				}
+				else if (root->data > data)
+				{
+					return GetLvlDw(data, root->left);
+				}
+			}
+			return GetLvlDw(data, root->right);
 		}
 
 		return root;
@@ -656,12 +700,80 @@ namespace Tree
 		}
 		else if (GetMaxElement(root) == current)
 		{
-			return END;
+			current = END;
 		}
 		else
 		{
 			current = getNext(current, root);
 		}
 		return *this;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::cIterator::operator++(int) noexcept(false)
+	{
+		cIterator copy_iter = *this;
+		if (current == END)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		else if (current == BEGIN)
+		{
+			current = GetMinElement(root);
+		}
+		else if (GetMaxElement(root) == current)
+		{
+			curent = END;
+		}
+		else
+		{
+			current = getNext(current, root);
+		}
+		return copy_iter;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator& AVLTree<T, T_Height>::cIterator::operator--() noexcept(false)
+	{
+		if (current == END)
+		{
+			current = GetMaxElement(root);
+		}
+		else if (current == BEGIN)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		else if (current == GetMinElement(root))
+		{
+			current = BEGIN;
+		}
+		else
+		{
+			current = getPrevious(current, root);
+		}
+		return *this;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::cIterator::operator--(int) noexcept(false)
+	{
+		cIterator copy_iter = *this;
+		if (current == END)
+		{
+			current = GetMaxElement(root);
+		}
+		else if (current == BEGIN)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		else if (current == GetMinElement(root))
+		{
+			current = BEGIN;
+		}
+		else
+		{
+			current = getPrevious(current, root);
+		}
+		return copy_iter;
 	}
 }
