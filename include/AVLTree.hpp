@@ -1,5 +1,6 @@
 #pragma once
 #include <initializer_list>
+#include <stdexcept> 
 
 namespace Tree
 {
@@ -21,10 +22,18 @@ namespace Tree
 			friend class AVLTree;
 		};
 
+		enum class ITER
+		{
+			cIter, rIter
+		};
+
 	private:
 		Node* root;
 		bool isSuccessfully = true;
 		unsigned short size_ = 0;
+
+		static constexpr AVLTree::Node* BEGIN = reinterpret_cast<AVLTree::Node*>(0x1);
+		static constexpr AVLTree::Node* END = reinterpret_cast<AVLTree::Node*>(0x2);
 
 		//
 		// Private Methods
@@ -32,8 +41,17 @@ namespace Tree
 
 		// static Methods
 		
+		// Get Next Element
+		static Node* getNext(Node* current, Node* root);
+
+		// Get Next Lvl + !!! DO NOT USE FOR MIDDLE ELEMENT !!!
+		static Node* GetLvlUp(const T& data, Node* root);
+
 		// Get Minimal Element
 		static Node* GetMinElement(Node* root);
+
+		// Get Maximal Element
+		static Node* GetMaxElement(Node* root);
 
 		// _static Methods
 
@@ -118,7 +136,7 @@ namespace Tree
 			cIterator(Node* current, Node* root)
 				: root(root), current(current) { }
 
-			const T& operator*() const noexcept(false);
+			const T& operator*() const;
 
 			cIterator& operator++() noexcept(false);
 
@@ -265,12 +283,72 @@ namespace Tree
 
 	// static Methods
 
+	// Get Next Element
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::getNext(Node* current, Node* root)
+	{
+		Node* return_node = nullptr;
+		if (current->right)
+		{
+			return_node = GetMinElement(current->right);
+		}
+		else
+		{
+			if ()
+			{
+
+			}
+			if (current->data != root->data)
+			{
+				return_node = GetLvlUp(current->data, root);
+			}
+		}
+
+		return return_node;
+	}
+
+	// Get Next Lvl ! DO NOT USE FOR MID ELEMENT
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::GetLvlUp(const T& data, Node* root)
+	{
+		if (root && root->left)
+		{
+			if (root->left->data <= data)
+			{
+				if (root->data > data)
+				{
+					if (GetMaxElement(root->left)->data > data)
+					{
+						return GetLvlUpL(data, root->left->right);
+					}
+
+					return root;
+				}
+				else if (root->data < data)
+				{
+					return GetLvlUpL(data, root->right);
+				}
+			}
+			return GetLvlUpL(data, root->left);
+		}
+
+		return root;
+	}
+
 	// Get Minimal Element
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::GetMinElement(Node* root)
 	{
 		return root->left == nullptr ? root : GetMinElement(root->left);
 	}
+
+	// Get Maximal Element
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::GetMaxElement(Node* root)
+	{
+		return root->right == nullptr ? root : GetMaxElement(root->right);
+	}
+
 
 	// _static Methods
 
@@ -550,4 +628,40 @@ namespace Tree
 	}
 
 	// _Public Methods
+
+	//
+	// cIterator
+	//
+
+	template<typename T, typename T_Height>
+	inline const T& AVLTree<T, T_Height>::cIterator::operator*() const noexcept(false)
+	{
+		if (current == END || current == BEGIN)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		return current->data;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator& AVLTree<T, T_Height>::cIterator::operator++() noexcept(false)
+	{
+		if (current == END)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		else if (current == BEGIN)
+		{
+			current = GetMinElement(root);
+		}
+		else if (GetMaxElement(root) == current)
+		{
+			return END;
+		}
+		else
+		{
+			current = getNext(current, root);
+		}
+		return *this;
+	}
 }
