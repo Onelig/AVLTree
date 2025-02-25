@@ -105,6 +105,36 @@ namespace Tree
 		const Node* find(const T& data) const&;
 		void clear();
 		void swap(Tree::AVLTree<T, T_Height>& AvlTree);
+		unsigned short size();
+
+	public: // cIterator
+		class cIterator
+		{
+		private:
+			Node* current;
+			Node* root;
+
+		public:
+			cIterator(Node* current, Node* root)
+				: root(root), current(current) { }
+
+			const T& operator*() const noexcept(false);
+
+			cIterator& operator++() noexcept(false);
+
+			cIterator operator++(int) noexcept(false);
+
+			cIterator& operator--() noexcept(false);
+
+			cIterator operator--(int) noexcept(false);
+
+			bool operator==(const cIterator& other) const;
+
+			bool operator!=(const cIterator& other) const;
+
+			T* operator->() const;
+		};
+
 	};
 
 	//
@@ -513,5 +543,11 @@ namespace Tree
 		AvlTree.size_ = copy_size;
 	}
 	
+	template<typename T, typename T_Height>
+	inline unsigned short AVLTree<T, T_Height>::size()
+	{
+		return size_;
+	}
+
 	// _Public Methods
 }
