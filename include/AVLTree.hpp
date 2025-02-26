@@ -123,7 +123,8 @@ namespace Tree
 		AVLTree<T, T_Height>& operator=(const AVLTree<T, T_Height>& other);
 		AVLTree<T, T_Height>& operator=(AVLTree<T, T_Height>&& other) noexcept;
 		bool operator==(const AVLTree<T, T_Height>& other) const;
-		
+		bool operator!=(const AVLTree<T, T_Height>& other) const;
+
 		virtual ~AVLTree();
 	public: // Methods
 		bool insert(const T& data);
@@ -131,7 +132,7 @@ namespace Tree
 		const Node* find(const T& data) const&;
 		void clear();
 		void swap(Tree::AVLTree<T, T_Height>& AvlTree);
-		unsigned short size();
+		unsigned short size() const;
 
 		friend class cIterator;
 	public: // cIterator
@@ -610,6 +611,7 @@ namespace Tree
 	template<typename T, typename T_Height>
 	inline AVLTree<T, T_Height>& AVLTree<T, T_Height>::operator=(const AVLTree<T, T_Height>& other)
 	{
+		
 		if (this != &other)
 		{
 			this->clear();
@@ -643,6 +645,12 @@ namespace Tree
 			IsEqual(root, other.root);
 
 		return isSuccessfully;
+	}
+
+	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::operator!=(const AVLTree<T, T_Height>& other) const
+	{
+		return !(*this == other);
 	}
 
 	template<typename T, typename T_Height>
@@ -705,7 +713,7 @@ namespace Tree
 	}
 	
 	template<typename T, typename T_Height>
-	inline unsigned short AVLTree<T, T_Height>::size()
+	inline unsigned short AVLTree<T, T_Height>::size()const
 	{
 		return size_;
 	}
