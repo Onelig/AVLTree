@@ -134,7 +134,6 @@ namespace Tree
 		void swap(Tree::AVLTree<T, T_Height>& AvlTree);
 		unsigned short size() const;
 
-		friend class cIterator;
 	public: // cIterator
 		class cIterator
 		{
@@ -167,6 +166,40 @@ namespace Tree
 		[[nodiscard]] const cIterator cbegin() const;
 		[[nodiscard]] cIterator end() const;
 		[[nodiscard]] const cIterator cend() const;
+
+	public: // rIterator
+		class rIterator
+		{
+		private:
+			Node* current;
+			Node* root;
+
+		public:
+			rIterator(Node* current, Node* root) : current(current), root(root) {}
+
+			const T& operator*() const noexcept(false);
+
+			rIterator& operator++() noexcept(false);
+
+			rIterator operator++(int) noexcept(false);
+
+			rIterator& operator--() noexcept(false);
+
+			rIterator operator--(int) noexcept(false);
+
+			bool operator==(const rIterator& other) const;
+
+			bool operator!=(const rIterator& other) const;
+
+			T* operator->() const;
+
+			cIterator base() const noexcept(false);
+		};
+
+		[[nodiscard]] rIterator rbegin() const;
+		[[nodiscard]] const rIterator crbegin() const;
+		[[nodiscard]] rIterator rend() const;
+		[[nodiscard]] const rIterator crend() const;
 	};
 
 	//
@@ -727,7 +760,7 @@ namespace Tree
 	template<typename T, typename T_Height>
 	inline const T& AVLTree<T, T_Height>::cIterator::operator*() const noexcept(false)
 	{
-		if (current == END || current == BEGIN)
+		if (current == END || current == nullptr)
 		{
 			throw std::out_of_range("Out of range");
 		}
@@ -741,18 +774,15 @@ namespace Tree
 		{
 			throw std::out_of_range("Out of range");
 		}
-		else if (current == BEGIN)
-		{
-			current = GetMinElement(root);
-		}
 		else if (GetMaxElement(root) == current)
 		{
 			current = END;
 		}
-		else
+		else if (current != nullptr)
 		{
 			current = getNext(current, root);
 		}
+
 		return *this;
 	}
 
@@ -764,15 +794,11 @@ namespace Tree
 		{
 			throw std::out_of_range("Out of range");
 		}
-		else if (current == BEGIN)
-		{
-			current = GetMinElement(root);
-		}
 		else if (GetMaxElement(root) == current)
 		{
 			curent = END;
 		}
-		else
+		else if (current != nullptr)
 		{
 			current = getNext(current, root);
 		}
@@ -786,15 +812,11 @@ namespace Tree
 		{
 			current = GetMaxElement(root);
 		}
-		else if (current == BEGIN)
-		{
-			throw std::out_of_range("Out of range");
-		}
 		else if (current == GetMinElement(root))
 		{
-			current = BEGIN;
+			current = nullptr;
 		}
-		else
+		else if (current != nullptr)
 		{
 			current = getPrevious(current, root);
 		}
@@ -809,15 +831,11 @@ namespace Tree
 		{
 			current = GetMaxElement(root);
 		}
-		else if (current == BEGIN)
-		{
-			throw std::out_of_range("Out of range");
-		}
 		else if (current == GetMinElement(root))
 		{
-			current = BEGIN;
+			current = nullptr;
 		}
-		else
+		else if (current != nullptr)
 		{
 			current = getPrevious(current, root);
 		}
@@ -875,4 +893,163 @@ namespace Tree
 	}
 
 	// _cIterator
+
+	// 
+	// rIterator
+	// 
+
+	template<typename T, typename T_Height>
+	inline const T& AVLTree<T, T_Height>::rIterator::operator*() const noexcept(false)
+	{
+		if (current == BEGIN || current == nullptr)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		return current->data;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::rIterator& AVLTree<T, T_Height>::rIterator::operator++() noexcept(false)
+	{
+		if (current == BEGIN)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		else if (current == GetMinElement(root))
+		{
+			current = BEGIN;
+		}
+		else if (current != nullptr)
+		{
+			current = getPrevious(current, root);
+		}
+
+		return *this;
+	}
+	
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::rIterator::operator++(int) noexcept(false)
+	{
+		rIterator copy_iter = *this;
+
+		if (current == BEGIN)
+		{
+			throw std::out_of_range("Out of range");
+		}
+		else if (current == GetMinElement(root))
+		{
+			current = BEGIN;
+		}
+		else if (current != nullptr)
+		{
+			current = getPrevious(current, root);
+		}
+
+		return copy_iter;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::rIterator& AVLTree<T, T_Height>::rIterator::operator--() noexcept(false)
+	{
+		if (current == BEGIN)
+		{
+			current = GetMinElement(root);
+		}
+		else if (current == GetMaxElement(root))
+		{
+			current = nullptr;
+		}
+		else if (current != nullptr)
+		{
+			current = getNext(current, root);
+		}
+
+		return *this;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::rIterator::operator--(int) noexcept(false)
+	{
+		rIterator copy_iter = *this;
+
+		if (current == BEGIN)
+		{
+			current = GetMinElement(root);
+		}
+		else if (current == GetMaxElement(root))
+		{
+			current = nullptr;
+		}
+		else if (current != nullptr)
+		{
+			current = getNext(current, root);
+		}
+
+		return copy_iter;
+	}
+
+	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::rIterator::operator==(const rIterator& other) const
+	{
+		return current == other.current;
+	}
+
+	template<typename T, typename T_Height>
+	inline bool AVLTree<T, T_Height>::rIterator::operator!=(const rIterator& other) const
+	{
+		return current != other.current;
+	}
+
+	template<typename T, typename T_Height>
+	inline T* AVLTree<T, T_Height>::rIterator::operator->() const
+	{
+		return &current->data;
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::cIterator AVLTree<T, T_Height>::rIterator::base() const noexcept(false)
+	{
+		if (current == GetMaxElement(root))
+		{
+			return cIterator(END, root);
+		}
+		
+		return ++cIterator(current, root);
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::rbegin() const
+	{
+		if (root == nullptr)
+		{
+			return rIterator(BEGIN, nullptr);
+		}
+
+		return rIterator(GetMaxElement(root), root);
+	}
+
+	template<typename T, typename T_Height>
+	inline typename const AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::crbegin() const
+	{
+		if (root == nullptr)
+		{
+			return rIterator(BEGIN, nullptr);
+		}
+
+		return rIterator(GetMaxElement(root), root);
+	}
+
+	template<typename T, typename T_Height>
+	inline typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::rend() const
+	{
+		return rIterator(BEGIN, root);
+	}
+
+	template<typename T, typename T_Height>
+	inline typename const AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::crend() const
+	{
+		return rIterator(BEGIN, root);
+	}
+
+	// _rIterator
 }
