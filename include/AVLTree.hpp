@@ -531,127 +531,43 @@ namespace Tree
 	inline int AVLTree<T, T_Height>::GetDistance(const T& val, Node* LCA, bool side) const // base LCA->data != val
 	{
 		int elements = 0;
-
-		if (LCA)
+		
+		while (LCA && val != LCA->data)
 		{
-			if (side == false) // left
+			if ((side == false && val < LCA->data) || (side == true && val > LCA->data))
 			{
-				if (val == LCA->data)
-				{
-					elements += LCA->size_r + 1;
-				}
-				else if (val < LCA->data)
-				{
-					elements += (isSuccessfully ? 0 : LCA->size_r);
-					isSuccessfully = false;
-					elements += GetDistance(val, LCA->left, false) + 1;
-				}
-				else if (val > LCA->data)
-				{
-					isSuccessfully = false;
-					elements += GetDistance(val, LCA->right, false);	
-				}
+				elements += (isSuccessfully ? 0 : (side ? LCA->size_l : LCA->size_r)) + 1;
+				isSuccessfully = false;
+				LCA = (side ? LCA->right : LCA->left);
 			}
-			
-			else if (side == true) // right
+			else
 			{
-				if (val == LCA->data)
-				{
-					elements += LCA->size_l + 1;
-				}
-				else if (val > LCA->data)
-				{
-					elements += (isSuccessfully ? 0 : LCA->size_l);
-					isSuccessfully = false;
-					elements += GetDistance(val, LCA->right, true) + 1;
-				}
-				else if (val < LCA->data)
-				{
-					isSuccessfully = false;
-					elements += GetDistance(val, LCA->left, true);
-				}
+				isSuccessfully = false;
+				LCA = (side ? LCA->left : LCA->right);
 			}
-
-			return elements;
 		}
 
-		return INT_MIN;
+		elements = (LCA ? ((side) ? LCA->size_l : LCA->size_r) + elements : INT_MIN);
+		return elements;
 	}
-	/* int elements = 0;
-
-		if (LCA)
-		{
-			if (LCA->data == val)
-				return 0;
-
-			else if (side == false) // left
-			{
-				if (LCA->left)
-				{
-					if (val == LCA->left->data)
-					{
-						elements += LCA->left->size_r + 1;
-					}
-					else if (val < LCA->left->data)
-					{
-						elements += LCA->left->size_r + 1;
-						elements += GetDistance(val, LCA->left, false);
-					}
-					else if (val > LCA->left->data)
-					{
-						elements += GetDistance(val, LCA->left->right, false);
-					} 
-
-					return elements;
-				}
-				
-			}
-
-			else if (side == true) // right
-			{
-				if (LCA->right)
-				{
-					if (val == LCA->right->data)
-					{
-						elements += LCA->right->size_l + 1;
-					}
-					else if (val < LCA->right->data)
-					{
-						elements += GetDistance(val, LCA->right->left, true);
-					}
-					else if (val > LCA->right->data)
-					{
-						elements += LCA->right->size_l + 1;
-						elements += GetDistance(val, LCA->right, true);
-					}
-
-					return elements;
-				}
-			}
-		}
-
-		return INT_MIN;*/
 
 
 	// Find LCA(Lowest Common Ancestor)
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::LCA_find(const T& elem1, const T& elem2, Node* root) const
 	{
-		if (root == nullptr)
+		while (root) 
 		{
-			return nullptr;
+			if (elem1 < root->data && elem2 < root->data)
+				root = root->left;
+			else if (elem1 > root->data && elem2 > root->data)
+				root = root->right;
+			else
+				return root;
 		}
-		else if (elem1 < root->data && elem2 < root->data)
-		{
-			return LCA_find(elem1, elem2, root->left);
-		}
-		else if (elem1 > root->data && elem2 > root->data)
-		{
-			return LCA_find(elem1, elem2, root->right);
-		}
-
-		return root;
+		return nullptr;
 	}
+
 
 	// R || Insert Element + Balance
 	template<typename T, typename T_Height>
@@ -894,11 +810,9 @@ namespace Tree
 
 		isSuccessfully = true;
 		int l_dist = (LCA->data == element1 ? 0 : GetDistance(element1, LCA, false));
-		l_dist -= (l_dist > 0 ? 1 : 0);
 
 		isSuccessfully = true;
 		int r_dist = (LCA->data == element2 ? 0 : GetDistance(element2, LCA, true));
-		r_dist -= (r_dist > 0 ? 1 : 0);
 
 		return (l_dist < 0 || r_dist < 0) ? 0 : (l_dist + r_dist);
 	}
