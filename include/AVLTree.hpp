@@ -14,7 +14,7 @@ namespace Tree
 		public:
 			T data;
 		private:
-			Node(T data = T(), Node* right = nullptr, Node* left = nullptr) : data(data), right(right), left(left), height(1), size_r(0), size_l(0) { }
+			Node(T data = T(), Node* right = nullptr, Node* left = nullptr) : data(data), right(right), left(left), height(1), size_r(0), size_l(0) {}
 
 			Node* left;
 			Node* right;
@@ -42,7 +42,7 @@ namespace Tree
 		//
 
 		// static Methods
-		
+
 		// Get Next Element
 		static Node* getNext(Node* current, Node* root);
 
@@ -121,8 +121,8 @@ namespace Tree
 
 		// _Private Methods
 	public: // Constructors
-		AVLTree() : root(nullptr) { }
-		AVLTree(const T& data) : root(new Node(data)) { }
+		AVLTree() : root(nullptr) {}
+		AVLTree(const T& data) : root(new Node(data)) {}
 		AVLTree(const std::initializer_list<T>& init_list);
 
 		AVLTree(const AVLTree<T, T_Height>& other);
@@ -152,7 +152,8 @@ namespace Tree
 
 		public:
 			cIterator(Node* current, Node* root)
-				: root(root), current(current) { }
+				: root(root), current(current) {
+			}
 
 			const T& operator*() const;
 
@@ -214,7 +215,7 @@ namespace Tree
 	//
 	// Private Methods
 	//
-	
+
 	// Balancing
 
 	// Single Left Rotation
@@ -283,7 +284,7 @@ namespace Tree
 		if (!isSuccessfully)
 			return;
 
-		if (myRoot != nullptr && other != nullptr) 
+		if (myRoot != nullptr && other != nullptr)
 		{
 			if (myRoot->data != other->data)
 			{
@@ -341,8 +342,9 @@ namespace Tree
 	{
 		if (root->left == minroot)
 		{
+			Node* copy_minroot = minroot;
+			root->left = minroot->right;
 			delete minroot;
-			root->left = nullptr;
 		}
 		else
 		{
@@ -479,8 +481,8 @@ namespace Tree
 	inline void AVLTree<T, T_Height>::update(Node* root)
 	{
 		root->height = (height(root->left) > height(root->right) ? height(root->left) : height(root->right)) + 1;
-		root->size_r = (root->right ? root->right->size_r + root->right->size_l + 1 : 0);	
-		root->size_l = (root->left  ? root->left->size_l  + root->left->size_r  + 1 : 0);
+		root->size_r = (root->right ? root->right->size_r + root->right->size_l + 1 : 0);
+		root->size_l = (root->left ? root->left->size_l + root->left->size_r + 1 : 0);
 	}
 
 	// Get Balance Factor
@@ -531,7 +533,7 @@ namespace Tree
 	inline int AVLTree<T, T_Height>::GetDistance(const T& val, Node* LCA, bool side) const // base LCA->data != val
 	{
 		int elements = 0;
-		
+
 		while (LCA && val != LCA->data)
 		{
 			if ((side == false && val < LCA->data) || (side == true && val > LCA->data))
@@ -556,7 +558,7 @@ namespace Tree
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::LCA_find(const T& elem1, const T& elem2, Node* root) const
 	{
-		while (root) 
+		while (root)
 		{
 			if (elem1 < root->data && elem2 < root->data)
 				root = root->left;
@@ -618,7 +620,7 @@ namespace Tree
 				else
 				{
 					root->data = minroot->data;
-					root->right = RemBalMin(root->right, minroot);	
+					root->right = RemBalMin(root->right, minroot);
 				}
 			}
 			else
@@ -796,7 +798,7 @@ namespace Tree
 		size_ = AvlTree.size_;
 		AvlTree.size_ = copy_size;
 	}
-	
+
 	template<typename T, typename T_Height>
 	inline unsigned short AVLTree<T, T_Height>::size()const
 	{
@@ -806,15 +808,21 @@ namespace Tree
 	template<typename T, typename T_Height>
 	inline unsigned int AVLTree<T, T_Height>::distance(const T& element1, const T& element2) const
 	{
-		Node* LCA = LCA_find(element1, element2, root);
+		if (element1 < element2)
+		{
+			Node* LCA = LCA_find(element1, element2, root);
+			if (LCA != nullptr)
+			{
+				isSuccessfully = true;
+				int l_dist = (LCA->data == element1 ? 0 : GetDistance(element1, LCA, false));
 
-		isSuccessfully = true;
-		int l_dist = (LCA->data == element1 ? 0 : GetDistance(element1, LCA, false));
+				isSuccessfully = true;
+				int r_dist = (LCA->data == element2 ? 0 : GetDistance(element2, LCA, true));
 
-		isSuccessfully = true;
-		int r_dist = (LCA->data == element2 ? 0 : GetDistance(element2, LCA, true));
-
-		return (l_dist < 0 || r_dist < 0) ? 0 : (l_dist + r_dist);
+				return (l_dist < 0 || r_dist < 0) ? 0 : (l_dist + r_dist);
+			}
+		}
+		return 0;
 	}
 
 	// _Public Methods
@@ -992,7 +1000,7 @@ namespace Tree
 
 		return *this;
 	}
-	
+
 	template<typename T, typename T_Height>
 	inline typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::rIterator::operator++(int) noexcept(false)
 	{
@@ -1079,7 +1087,7 @@ namespace Tree
 		{
 			return cIterator(END, root);
 		}
-		
+
 		return ++cIterator(current, root);
 	}
 
