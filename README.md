@@ -19,14 +19,14 @@ The `tests` branch contains unit tests that check the correctness of the tree’
 ## 📦 Installation and Usage  
 
 1. Clone the repository:  
-   ```sh
+  ```sh
    git clone https://github.com/Onelig/AVLTree.git
    cd AVLTree
-   ```
+  ```
 2. Include the header file AVLTree.hpp in your project
-   ```sh
+  ```sh
    #include "AVLTree.hpp"
-   ```
+  ```
 
 ## 🎉 Acknowledgments and Support
 If you like this project, feel free to give it a star! ⭐ Always happy to hear your feedback and suggestions. If you have any questions or ideas for improvement — feel free to create issues or pull requests. The tree will keep growing and evolving! 🚀
@@ -56,14 +56,14 @@ Password Generator is licensed under the MIT License, see [LICENSE](https://gith
 ## 📦 Установка и использование  
 
 1. Клонируй репозиторий:  
-   ```sh
+  ```sh
    git clone https://github.com/Onelig/AVLTree.git
    cd AVLTree
-   ```
+  ```
 2. Подключи заголовочный файл AVLTree.hpp в своём проекте:
-   ```sh
+  ```sh
    #include "AVLTree.hpp"
-   ```
+  ```
 
 ## 🎉 Благодарности и поддержка
 Если тебе понравился этот проект, ставь звезды! ⭐ Всегда рад фидбекам и предложениям. Если возникнут вопросы или идеи по улучшению - создавайте issues или pull request. Дерево будет расти и развиваеться! 🚀
