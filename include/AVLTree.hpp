@@ -341,8 +341,9 @@ namespace Tree
 	{
 		if (root->left == minroot)
 		{
+			Node* copy_minroot = minroot;
+			root->left = minroot->right;
 			delete minroot;
-			root->left = nullptr;
 		}
 		else
 		{
@@ -806,15 +807,21 @@ namespace Tree
 	template<typename T, typename T_Height>
 	inline unsigned int AVLTree<T, T_Height>::distance(const T& element1, const T& element2) const
 	{
-		Node* LCA = LCA_find(element1, element2, root);
+		if (element1 < element2)
+		{
+			Node* LCA = LCA_find(element1, element2, root);
+			if (LCA != nullptr)
+			{
+				isSuccessfully = true;
+				int l_dist = (LCA->data == element1 ? 0 : GetDistance(element1, LCA, false));
 
-		isSuccessfully = true;
-		int l_dist = (LCA->data == element1 ? 0 : GetDistance(element1, LCA, false));
+				isSuccessfully = true;
+				int r_dist = (LCA->data == element2 ? 0 : GetDistance(element2, LCA, true));
 
-		isSuccessfully = true;
-		int r_dist = (LCA->data == element2 ? 0 : GetDistance(element2, LCA, true));
-
-		return (l_dist < 0 || r_dist < 0) ? 0 : (l_dist + r_dist);
+				return (l_dist < 0 || r_dist < 0) ? 0 : (l_dist + r_dist);
+			}
+		}
+		return 0;
 	}
 
 	// _Public Methods
