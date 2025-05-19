@@ -772,7 +772,7 @@ namespace Tree
 	}
 
 	template<typename T, typename T_Height>
-	inline typename const AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::find(const T& data) const&
+	inline const typename AVLTree<T, T_Height>::Node* AVLTree<T, T_Height>::find(const T& data) const&
 	{
 		return find_(root, data);
 	}
@@ -800,7 +800,7 @@ namespace Tree
 	}
 
 	template<typename T, typename T_Height>
-	inline unsigned short AVLTree<T, T_Height>::size()const
+	inline unsigned short AVLTree<T, T_Height>::size() const
 	{
 		return size_;
 	}
@@ -870,7 +870,7 @@ namespace Tree
 		}
 		else if (GetMaxElement(root) == current)
 		{
-			curent = END;
+			current = END;
 		}
 		else
 		{
@@ -1103,7 +1103,7 @@ namespace Tree
 	}
 
 	template<typename T, typename T_Height>
-	inline typename const AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::crbegin() const
+	inline const typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::crbegin() const
 	{
 		if (root == nullptr)
 		{
@@ -1120,7 +1120,7 @@ namespace Tree
 	}
 
 	template<typename T, typename T_Height>
-	inline typename const AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::crend() const
+	inline const typename AVLTree<T, T_Height>::rIterator AVLTree<T, T_Height>::crend() const
 	{
 		return rIterator(BEGIN, root);
 	}
