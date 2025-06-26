@@ -32,7 +32,7 @@ The `tests` branch contains unit tests that check the correctness of the tree’
 If you like this project, feel free to give it a star! ⭐ Always happy to hear your feedback and suggestions. If you have any questions or ideas for improvement — feel free to create issues or pull requests. The tree will keep growing and evolving! 🚀
 
 ## License
-Password Generator is licensed under the MIT License, see [LICENSE](https://github.com/Onelig/AVLTree/blob/main/LICENSE) for more information.
+AVLTree is licensed under the MIT License, see [LICENSE](https://github.com/Onelig/AVLTree/blob/main/LICENSE) for more information.
 
 
 # 🌲 AVLTree — Самобалансирующееся AVL-дерево на C++  
