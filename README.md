@@ -12,10 +12,6 @@
 - 🔹 **Fast distance calculation between elements**: `unsigned int distance(const T& element1, const T& element2) const` (faster than `std::set`)  
 - 🔹 **Iterator support** for easy traversal of tree elements  
 
-## 🧪 Testing  
-
-The `tests` branch contains unit tests that check the correctness of the tree’s functionality.  
-
 ## 📦 Installation and Usage  
 
 1. Clone the repository:  
@@ -24,8 +20,16 @@ The `tests` branch contains unit tests that check the correctness of the tree’
    cd AVLTree
   ```
 2. Include the header file AVLTree.hpp in your project
-  ```sh
+  ```c++
    #include "AVLTree.hpp"
+  ```
+
+## 🧪 Testing  
+```c++
+  mkdir build && cd build
+  cmake ..
+  cmake --build .
+  ctest 
   ```
 
 ## 🎉 Acknowledgments and Support
@@ -49,10 +53,6 @@ AVLTree is licensed under the MIT License, see [LICENSE](https://github.com/Onel
 - 🔹 **Быстрое вычисление расстояния между элементами**: `unsigned int distance(const T& element1, const T& element2) const` (быстрее, чем `std::set`)  
 - 🔹 **Поддержка итераторов** для удобной работы с элементами дерева  
 
-## 🧪 Тестирование  
-
-Ветка `tests` содержит модульные тесты, проверяющие корректность работы дерева.  
-
 ## 📦 Установка и использование  
 
 1. Клонируй репозиторий:  
@@ -61,8 +61,17 @@ AVLTree is licensed under the MIT License, see [LICENSE](https://github.com/Onel
    cd AVLTree
   ```
 2. Подключи заголовочный файл AVLTree.hpp в своём проекте:
-  ```sh
+  ```c++
    #include "AVLTree.hpp"
+  ```
+
+## 🧪 Тестирование  
+
+```c++
+  mkdir build && cd build
+  cmake ..
+  cmake --build .
+  ctest 
   ```
 
 ## 🎉 Благодарности и поддержка
