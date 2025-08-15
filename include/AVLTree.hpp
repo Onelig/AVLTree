@@ -687,6 +687,8 @@ namespace Tree
 	inline AVLTree<T, T_Height>::AVLTree(AVLTree<T, T_Height>&& other)
 		: root(other.root), size_(other.size_)
 	{
+		size_ = other.size_;
+		root = other.root;
 		other.root = nullptr;
 	}
 
