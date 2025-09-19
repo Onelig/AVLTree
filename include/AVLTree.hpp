@@ -59,9 +59,10 @@ namespace Tree
 			using difference_type = std::ptrdiff_t;
 			using pointer = const T*;
 			using reference = const T&;
-			using iterator_category = std::bidirectional_iterator_tag;
 #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 202002L) || __cplusplus >= 202002L)
 			using iterator_concept = std::bidirectional_iterator_tag;
+#else 
+			using iterator_category = std::bidirectional_iterator_tag;
 #endif
 
 			Iterator(Node* current, Node* root, ittype flag)
